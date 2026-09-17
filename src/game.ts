@@ -45,7 +45,8 @@ export const bins = [
   { id: 'metal', name: 'Metal', hint: 'Latas de metal', color: '#687b82' },
 ] as const
 export type BinId = typeof bins[number]['id']
-export const items: { id: string; name: string; bin: BinId; art: string; tip: string }[] = [
+export type RecyclingItem = { id: string; name: string; bin: BinId; art: string; tip: string }
+export const items: RecyclingItem[] = [
   { id: 'banana', name: 'Cáscara de plátano', bin: 'organic', art: 'banana', tip: 'Es un resto de comida: va en Orgánico.' },
   { id: 'bottle', name: 'Botella de plástico', bin: 'plastic', art: 'bottle', tip: 'Esta botella vacía es de plástico.' },
   { id: 'paper', name: 'Hoja de papel', bin: 'paper', art: 'paper', tip: 'El papel limpio y seco va en Papel.' },
@@ -56,6 +57,37 @@ export const items: { id: string; name: string; bin: BinId; art: string; tip: st
   { id: 'tin', name: 'Lata de conservas', bin: 'metal', art: 'tin', tip: 'Esta lata vacía está hecha de metal.' },
 ]
 
+// The city missions stay intentionally short. Endless practice uses a much
+// wider pool so children learn to recognize materials instead of memorizing
+// the order of the eight mission objects.
+export const practiceItems: RecyclingItem[] = [
+  ...items,
+  { id: 'orange', name: 'Cáscara de naranja', bin: 'organic', art: 'orange', tip: 'Las cáscaras de fruta son residuos orgánicos.' },
+  { id: 'eggshell', name: 'Cáscara de huevo', bin: 'organic', art: 'eggshell', tip: 'La cáscara de huevo es un resto de comida.' },
+  { id: 'coffee', name: 'Café usado', bin: 'organic', art: 'coffee', tip: 'El café usado puede volver a la tierra como composta.' },
+  { id: 'bread', name: 'Pedazo de pan', bin: 'organic', art: 'bread', tip: 'El pan es un resto de alimento: va en Orgánico.' },
+  { id: 'carrot', name: 'Punta de zanahoria', bin: 'organic', art: 'carrot', tip: 'Los restos de verduras son orgánicos.' },
+  { id: 'leaves', name: 'Hojas secas', bin: 'organic', art: 'leaves', tip: 'Las hojas secas pueden convertirse en composta.' },
+  { id: 'newspaper', name: 'Periódico', bin: 'paper', art: 'newspaper', tip: 'El periódico limpio y seco va con el papel.' },
+  { id: 'notebook', name: 'Cuaderno usado', bin: 'paper', art: 'notebook', tip: 'Sus hojas son de papel; retira piezas que no sean de papel.' },
+  { id: 'paper-bag', name: 'Bolsa de papel', bin: 'paper', art: 'paper-bag', tip: 'Una bolsa limpia de papel va en Papel.' },
+  { id: 'egg-carton', name: 'Cartón de huevos', bin: 'paper', art: 'egg-carton', tip: 'Este empaque seco está hecho de cartón.' },
+  { id: 'tube', name: 'Tubo de cartón', bin: 'paper', art: 'tube', tip: 'El tubo de cartón va junto con el papel.' },
+  { id: 'magazine', name: 'Revista', bin: 'paper', art: 'magazine', tip: 'Las revistas limpias y secas van en Papel.' },
+  { id: 'shampoo', name: 'Botella de champú', bin: 'plastic', art: 'shampoo', tip: 'Este envase vacío está hecho de plástico.' },
+  { id: 'yogurt', name: 'Vaso de yogur', bin: 'plastic', art: 'yogurt', tip: 'Enjuagado y vacío, este vaso es de plástico.' },
+  { id: 'cap', name: 'Tapa de botella', bin: 'plastic', art: 'cap', tip: 'Esta tapa está hecha de plástico.' },
+  { id: 'detergent', name: 'Envase de detergente', bin: 'plastic', art: 'detergent', tip: 'El envase vacío de detergente es de plástico.' },
+  { id: 'food-container', name: 'Recipiente de plástico', bin: 'plastic', art: 'food-container', tip: 'Este recipiente limpio está hecho de plástico.' },
+  { id: 'spray-bottle', name: 'Atomizador vacío', bin: 'plastic', art: 'spray-bottle', tip: 'La botella vacía del atomizador es de plástico.' },
+  { id: 'foil', name: 'Papel aluminio limpio', bin: 'metal', art: 'foil', tip: 'Aunque es delgado, el aluminio es un metal.' },
+  { id: 'metal-lid', name: 'Tapa metálica', bin: 'metal', art: 'metal-lid', tip: 'Esta tapa está hecha de metal.' },
+  { id: 'spoon', name: 'Cuchara de metal', bin: 'metal', art: 'spoon', tip: 'La cuchara está hecha de metal.' },
+  { id: 'key', name: 'Llave vieja', bin: 'metal', art: 'key', tip: 'Las llaves están hechas de metal.' },
+  { id: 'steel-cup', name: 'Vaso de acero', bin: 'metal', art: 'steel-cup', tip: 'El acero pertenece a los metales.' },
+  { id: 'metal-tray', name: 'Charola metálica', bin: 'metal', art: 'metal-tray', tip: 'Esta charola limpia está hecha de metal.' },
+]
+
 // Keep the storage key so version-1 school progress can migrate without data loss.
 export const STORAGE_KEY = 'eco-ciudad-v1'
 export const recyclingLevels: Record<ZoneId, { level: number; fallDuration: number; label: string }> = {
@@ -64,13 +96,13 @@ export const recyclingLevels: Record<ZoneId, { level: number; fallDuration: numb
   park: { level: 3, fallDuration: 10000, label: 'Más rápido' },
   community: { level: 4, fallDuration: 7000, label: 'Reto de la ciudad' },
 }
-export type Save = { version: 2; answers: Partial<Record<ZoneId, string>>; recycling: Record<ZoneId, string[]>; mistakes: number; sound: boolean; reduceMotion: boolean }
-export function freshSave(): Save { return { version: 2, answers: {}, recycling: { school: [], home: [], park: [], community: [] }, mistakes: 0, sound: true, reduceMotion: matchMedia('(prefers-reduced-motion: reduce)').matches } }
+export type Save = { version: 3; answers: Partial<Record<ZoneId, string>>; recycling: Record<ZoneId, string[]>; mistakes: number; practiceBest: number; sound: boolean; reduceMotion: boolean }
+export function freshSave(): Save { return { version: 3, answers: {}, recycling: { school: [], home: [], park: [], community: [] }, mistakes: 0, practiceBest: 0, sound: true, reduceMotion: matchMedia('(prefers-reduced-motion: reduce)').matches } }
 export function loadSave(): Save {
   const fallback = freshSave()
   try {
     const value = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null')
-    if (!value || ![1, 2].includes(value.version) || !value.answers || typeof value.answers !== 'object' || Array.isArray(value.answers)) return fallback
+    if (!value || ![1, 2, 3].includes(value.version) || !value.answers || typeof value.answers !== 'object' || Array.isArray(value.answers)) return fallback
     const answers: Save['answers'] = {}
     const recycling = fallback.recycling
     for (const zone of zones) {
@@ -80,7 +112,7 @@ export function loadSave(): Save {
       const sorted = value.version === 1 ? (zone.id === 'school' ? value.sorted : []) : value.recycling?.[zone.id]
       recycling[zone.id] = Array.isArray(sorted) ? items.filter(item => sorted.includes(item.id)).map(item => item.id) : []
     }
-    return { ...fallback, answers, recycling, mistakes: Number.isSafeInteger(value.mistakes) ? Math.max(0, Math.min(9999, value.mistakes)) : 0, sound: typeof value.sound === 'boolean' ? value.sound : true, reduceMotion: typeof value.reduceMotion === 'boolean' ? value.reduceMotion : fallback.reduceMotion }
+    return { ...fallback, answers, recycling, mistakes: Number.isSafeInteger(value.mistakes) ? Math.max(0, Math.min(9999, value.mistakes)) : 0, practiceBest: Number.isSafeInteger(value.practiceBest) ? Math.max(0, Math.min(999999, value.practiceBest)) : 0, sound: typeof value.sound === 'boolean' ? value.sound : true, reduceMotion: typeof value.reduceMotion === 'boolean' ? value.reduceMotion : fallback.reduceMotion }
   } catch { return fallback }
 }
 export function getChoice(save: Save, zone: ZoneId) { return missions[zone].options.find(option => option.id === save.answers[zone]) }

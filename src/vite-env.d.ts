@@ -6,6 +6,8 @@ declare global {
     advanceTime: (ms: number) => void
     advanceRecycling?: (ms: number) => void
     recyclingState?: () => unknown
+    advancePractice?: (ms: number) => void
+    practiceState?: () => unknown
   }
 }
 

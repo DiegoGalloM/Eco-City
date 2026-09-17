@@ -4,7 +4,7 @@ Original prompt: Read the project instructions, master prompt, progress handoff,
 
 ## Current checkpoint
 
-A–D y cierre de calidad de E completados para el alcance actual, con cuatro retos progresivos. Master Prompt restaurado y leído. Optimización dedicada para celular aplazada por el usuario.
+A–D y cierre de calidad de E completados para el alcance actual. Se añadió una práctica infinita de separación de residuos como sección independiente, sin alterar la progresión de las cuatro zonas. Optimización dedicada para celular aplazada por el usuario.
 
 ## Implementado
 
@@ -15,8 +15,12 @@ A–D y cierre de calidad de E completados para el alcance actual, con cuatro re
 - Desbloqueo por decisión + reto completo; selección pausa, reintentos sin penalización irreversible.
 - Mouse, Pointer Events táctiles, toque y teclado; pausa por ajustes o pérdida de foco.
 - Corrección del clic residual que consumía Enter después de arrastrar.
-- Guardado version 2 en la clave existente, migración de decisiones y reciclaje escolar version 1.
+- Guardado version 3 añade practiceBest y migra sin perder decisiones ni reciclaje de versiones 1 y 2.
 - README con ejecución, contenido, estructura, recursos y guardados.
+- Acceso permanente desde el mapa a “Práctica de separación”, separado de las misiones.
+- Modo infinito con 32 objetos, orden variable, caída de 11 s a un mínimo de 2.4 s, nivel cada 5 aciertos y fin de ronda al dejar caer o clasificar mal.
+- Racha, nivel, indicador de velocidad, explicación del material al fallar, reintento inmediato y récord persistente.
+- 24 ilustraciones SVG nuevas y soporte de arrastre, toque y teclado; con movimiento reducido el temporizador avanza sin trasladar visualmente el objeto.
 
 ## Arquitectura
 
@@ -41,6 +45,9 @@ A–D y cierre de calidad de E completados para el alcance actual, con cuatro re
 - Evidencia: test-results/full-game/summary.json (incluye estado global y errores); test-results/production/summary.json; capturas en ambas carpetas.
 - El cliente de develop-web-game se usa para smoke de mapa y sincronización con render_game_to_text.
 - Sin defectos funcionales conocidos pendientes en el alcance verificado.
+- QA de práctica pasa en 360×800, 390×844, 768×1024, 1366×768 y 1440×900: 6 aciertos reducen la caída de 11000 a 7589 ms, nivel 2, fallo por bote incorrecto, fallo por caída, récord, drag/touch/teclado, cero overflow y cero errores de consola.
+- Regresión integral qa-game vuelve a pasar en 320×740, los cinco tamaños requeridos y 1920×1080, incluidos casos límite, migración, guardados inválidos y movimiento reducido.
+- Evidencia adicional: test-results/practice/summary.json y capturas map-entry/intro/playing/over; smoke del cliente develop-web-game en test-results/web-game-smoke/.
 
 ## Referencias
 

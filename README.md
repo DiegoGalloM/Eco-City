@@ -1,6 +1,6 @@
 # Eco-Ciudad
 
-Juego educativo de sostenibilidad para niñas y niños, con cuatro zonas, decisiones con consecuencias y cuatro retos de reciclaje cada vez más rápidos. React, TypeScript y Vite; sin servidor ni cuentas.
+Juego educativo de sostenibilidad para niñas y niños, con cuatro zonas, decisiones con consecuencias, cuatro retos de reciclaje y una práctica infinita de separación de residuos. React, TypeScript y Vite; sin servidor ni cuentas.
 
 ## Instalación y desarrollo
 
@@ -18,6 +18,7 @@ npm run build
 npm run lint
 npx playwright install chromium
 npm run test:game
+node scripts/qa-practice.mjs
 node scripts/qa-production.mjs
 ```
 
@@ -28,6 +29,8 @@ qa-production.mjs sirve dist temporalmente en localhost y comprueba carga, error
 ## Flujo
 
 Portada → mapa → misión → decisión → consecuencia → reciclaje de la zona → siguiente zona → logros → ciudad final.
+
+Desde el mapa también se puede abrir **Práctica de separación**, un modo independiente e infinito con 32 objetos. Cada acierto reduce el tiempo de caída; una clasificación incorrecta o dejar caer el objeto termina la ronda. La racha más alta queda guardada. Los objetos se pueden arrastrar, seleccionar por toque o clasificar con teclado.
 
 | Zona | Nivel | Tiempo de caída |
 | --- | --- | --- |
@@ -46,11 +49,13 @@ Para abrir la siguiente zona se necesita una decisión y completar sus 8 objetos
 - src/game.ts: misiones, opciones, materiales, velocidades, validación del guardado y puntuación.
 - src/data.ts: orden de las zonas.
 - src/Recycling.tsx: interacción de arrastre/toque/teclado y caída.
+- src/Practice.tsx: ronda infinita, aceleración, fallo, récord y estado accesible.
 - src/Art.tsx: escenas y alternativas SVG si una imagen no carga.
 - src/styles.css y src/game.css: presentación y adaptaciones existentes.
 - public/art/: WebP de producción y procedencia.
 - references/: imágenes aprobadas, usadas como orientación.
 - scripts/qa-game.mjs: prueba integral y casos límite.
+- scripts/qa-practice.mjs: práctica infinita en los cinco viewports requeridos.
 - graphify-out/: grafo local generado, excluido de Git.
 
 ## Contenido y puntuación
@@ -63,7 +68,7 @@ Cada métrica empieza en 10, suma las decisiones y un máximo de 10 por los 32 o
 
 ## Guardado
 
-localStorage usa la clave eco-ciudad-v1 y un documento con version: 2. Guarda decisiones, objetos por zona, errores y preferencias; métricas e insignias se derivan. La migración conserva decisiones y reciclaje escolar de version: 1; los otros retos empiezan vacíos. No inventa progreso completado. Los datos inválidos se filtran y el almacenamiento bloqueado permite seguir jugando con un aviso.
+localStorage usa la clave eco-ciudad-v1 y un documento con version: 3. Guarda decisiones, objetos por zona, errores, récord de práctica y preferencias; métricas e insignias se derivan. La migración conserva decisiones y reciclaje escolar de version: 1, además de aceptar guardados version: 2; los otros retos empiezan vacíos. No inventa progreso completado. Los datos inválidos se filtran y el almacenamiento bloqueado permite seguir jugando con un aviso.
 
 ## Recursos visuales
 
