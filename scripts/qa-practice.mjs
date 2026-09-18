@@ -68,6 +68,17 @@ for (const viewport of viewports) {
   snapshot = await state(page)
   assert.equal(snapshot.practice.totalItems, 32)
   const initialDuration = snapshot.practice.fallDuration
+  if (viewport.width === 390) {
+    await page.setViewportSize({ width: viewport.width, height: viewport.height - 44 })
+    await page.waitForTimeout(50)
+    snapshot = await state(page)
+    assert.equal(snapshot.practice.paused, false, 'mobile viewport resize must not pause the falling object')
+    const afterResize = snapshot.practice.activeItem.fallProgress
+    await page.evaluate(() => window.advanceTime(1000))
+    const afterAdvance = (await state(page)).practice.activeItem.fallProgress
+    assert(afterAdvance > afterResize, `falling continues after mobile browser chrome resizes the viewport (${afterResize} -> ${afterAdvance})`)
+    await page.setViewportSize(viewport)
+  }
   await chooseCorrect(page, viewport.width === 360 ? 'touch' : viewport.width === 1366 ? 'drag' : 'keyboard')
   for (let i = 1; i < 6; i++) await chooseCorrect(page)
   snapshot = await state(page)

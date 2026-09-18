@@ -14,6 +14,7 @@ A–D y cierre de calidad de E completados para el alcance actual. Se añadió u
 - Caída progresiva: 18/14/10/7 segundos en el orden Escuela/Casa/Parque/Comunidad.
 - Desbloqueo por decisión + reto completo; selección pausa, reintentos sin penalización irreversible.
 - Mouse, Pointer Events táctiles, toque y teclado; pausa por ajustes o pérdida de foco.
+- En práctica móvil, los cambios de altura del navegador ya no pausan la caída; solo cancelan un arrastre activo y recalculan la posición.
 - Corrección del clic residual que consumía Enter después de arrastrar.
 - Guardado version 3 añade practiceBest y migra sin perder decisiones ni reciclaje de versiones 1 y 2.
 - README con ejecución, contenido, estructura, recursos y guardados.
@@ -46,6 +47,7 @@ A–D y cierre de calidad de E completados para el alcance actual. Se añadió u
 - El cliente de develop-web-game se usa para smoke de mapa y sincronización con render_game_to_text.
 - Sin defectos funcionales conocidos pendientes en el alcance verificado.
 - QA de práctica pasa en 360×800, 390×844, 768×1024, 1366×768 y 1440×900: 6 aciertos reducen la caída de 11000 a 7589 ms, nivel 2, fallo por bote incorrecto, fallo por caída, récord, drag/touch/teclado, cero overflow y cero errores de consola.
+- Regresión móvil añadida: un `resize` vertical tipo barra del navegador mantiene `paused: false` y el objeto continúa descendiendo.
 - Regresión integral qa-game vuelve a pasar en 320×740, los cinco tamaños requeridos y 1920×1080, incluidos casos límite, migración, guardados inválidos y movimiento reducido.
 - Evidencia adicional: test-results/practice/summary.json y capturas map-entry/intro/playing/over; smoke del cliente develop-web-game en test-results/web-game-smoke/.
 

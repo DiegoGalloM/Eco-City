@@ -109,15 +109,20 @@ export default function Practice({ best, reduceMotion, suspended, onBest, onSoun
   }, [phase, paused, suspended, reduceMotion, duration, best])
 
   useEffect(() => {
-    const stop = () => { grab.current = null; setHoverBin(null); if (phaseRef.current === 'playing') setPaused(true) }
+    const cancelGrab = () => {
+      grab.current = null
+      setHoverBin(null)
+      objectRef.current?.style.setProperty('transform', reduceMotion ? 'translate3d(0, 0, 0)' : `translate3d(0, ${fall.current * Math.max(0, (boardRef.current?.clientHeight ?? 0) - 112)}px, 0)`)
+    }
+    const stop = () => { cancelGrab(); if (phaseRef.current === 'playing') setPaused(true) }
     const hidden = () => { if (document.hidden) stop() }
     const escape = (event: KeyboardEvent) => { if (event.key === 'Escape') select(false) }
     window.addEventListener('blur', stop)
     document.addEventListener('visibilitychange', hidden)
     window.addEventListener('keydown', escape)
-    window.addEventListener('resize', stop)
-    return () => { window.removeEventListener('blur', stop); document.removeEventListener('visibilitychange', hidden); window.removeEventListener('keydown', escape); window.removeEventListener('resize', stop) }
-  }, [])
+    window.addEventListener('resize', cancelGrab)
+    return () => { window.removeEventListener('blur', stop); document.removeEventListener('visibilitychange', hidden); window.removeEventListener('keydown', escape); window.removeEventListener('resize', cancelGrab) }
+  }, [reduceMotion])
 
   useEffect(() => {
     window.practiceState = () => ({ phase, activeItem: phase === 'playing' ? { ...item, selected: selectedRef.current, fallProgress: +fall.current.toFixed(3) } : null, score, best: Math.max(best, score), level, fallDuration: duration, paused: paused || suspended, message: phase === 'over' ? failure : message, totalItems: practiceItems.length })
